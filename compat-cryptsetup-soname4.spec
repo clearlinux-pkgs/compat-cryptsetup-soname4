@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : compat-cryptsetup-soname4
 Version  : 1.7.5
-Release  : 21
+Release  : 22
 URL      : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Source0  : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Summary  : cryptsetup library
@@ -14,7 +14,6 @@ License  : GPL-2.0 LGPL-2.1
 Requires: compat-cryptsetup-soname4-bin
 Requires: compat-cryptsetup-soname4-python3
 Requires: compat-cryptsetup-soname4-lib
-Requires: compat-cryptsetup-soname4-locales
 Requires: compat-cryptsetup-soname4-man
 Requires: compat-cryptsetup-soname4-python
 BuildRequires : libgcrypt-dev
@@ -59,14 +58,6 @@ Group: Libraries
 lib components for the compat-cryptsetup-soname4 package.
 
 
-%package locales
-Summary: locales components for the compat-cryptsetup-soname4 package.
-Group: Default
-
-%description locales
-locales components for the compat-cryptsetup-soname4 package.
-
-
 %package man
 Summary: man components for the compat-cryptsetup-soname4 package.
 Group: Default
@@ -102,8 +93,8 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1526394973
-%configure  --enable-python --with-python_version=3 --enable-static
+export SOURCE_DATE_EPOCH=1526396381
+%configure  --enable-python --with-python_version=3 --enable-static --disable-nls
 make  %{?_smp_mflags}
 
 %check
@@ -114,10 +105,9 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1526394973
+export SOURCE_DATE_EPOCH=1526396381
 rm -rf %{buildroot}
 %make_install
-%find_lang cryptsetup
 
 %files
 %defattr(-,root,root,-)
@@ -150,7 +140,3 @@ rm -rf %{buildroot}
 %files python3
 %defattr(-,root,root,-)
 %exclude /usr/lib/python3.6/site-packages/pycryptsetup.so
-
-%files locales -f cryptsetup.lang
-%defattr(-,root,root,-)
-
