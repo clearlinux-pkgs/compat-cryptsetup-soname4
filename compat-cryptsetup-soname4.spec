@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : compat-cryptsetup-soname4
 Version  : 1.7.5
-Release  : 29
+Release  : 30
 URL      : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Source0  : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Summary  : cryptsetup library
