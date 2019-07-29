@@ -5,17 +5,14 @@
 %define keepstatic 1
 Name     : compat-cryptsetup-soname4
 Version  : 1.7.5
-Release  : 31
+Release  : 32
 URL      : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Source0  : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Summary  : cryptsetup library
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.1
-Requires: compat-cryptsetup-soname4-bin
-Requires: compat-cryptsetup-soname4-python3
-Requires: compat-cryptsetup-soname4-lib
-Requires: compat-cryptsetup-soname4-man
-Requires: compat-cryptsetup-soname4-python
+Requires: compat-cryptsetup-soname4-lib = %{version}-%{release}
+Requires: compat-cryptsetup-soname4-license = %{version}-%{release}
 BuildRequires : libgcrypt-dev
 BuildRequires : libgpg-error-dev
 BuildRequires : pkgconfig(devmapper)
@@ -30,58 +27,21 @@ cryptsetup
 setup cryptographic volumes for dm-crypt (including LUKS extension)
 WEB PAGE:
 
-%package bin
-Summary: bin components for the compat-cryptsetup-soname4 package.
-Group: Binaries
-Requires: compat-cryptsetup-soname4-man
-
-%description bin
-bin components for the compat-cryptsetup-soname4 package.
-
-
-%package dev
-Summary: dev components for the compat-cryptsetup-soname4 package.
-Group: Development
-Requires: compat-cryptsetup-soname4-lib
-Requires: compat-cryptsetup-soname4-bin
-Provides: compat-cryptsetup-soname4-devel
-
-%description dev
-dev components for the compat-cryptsetup-soname4 package.
-
-
 %package lib
 Summary: lib components for the compat-cryptsetup-soname4 package.
 Group: Libraries
+Requires: compat-cryptsetup-soname4-license = %{version}-%{release}
 
 %description lib
 lib components for the compat-cryptsetup-soname4 package.
 
 
-%package man
-Summary: man components for the compat-cryptsetup-soname4 package.
+%package license
+Summary: license components for the compat-cryptsetup-soname4 package.
 Group: Default
 
-%description man
-man components for the compat-cryptsetup-soname4 package.
-
-
-%package python
-Summary: python components for the compat-cryptsetup-soname4 package.
-Group: Default
-Requires: compat-cryptsetup-soname4-python3
-
-%description python
-python components for the compat-cryptsetup-soname4 package.
-
-
-%package python3
-Summary: python3 components for the compat-cryptsetup-soname4 package.
-Group: Default
-Requires: python3-core
-
-%description python3
-python3 components for the compat-cryptsetup-soname4 package.
+%description license
+license components for the compat-cryptsetup-soname4 package.
 
 
 %prep
@@ -92,51 +52,53 @@ python3 components for the compat-cryptsetup-soname4 package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1526396381
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1564436552
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure  --enable-python --with-python_version=3 --enable-static --disable-nls
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1526396381
+export SOURCE_DATE_EPOCH=1564436552
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/compat-cryptsetup-soname4
+cp COPYING %{buildroot}/usr/share/package-licenses/compat-cryptsetup-soname4/COPYING
+cp COPYING.LGPL %{buildroot}/usr/share/package-licenses/compat-cryptsetup-soname4/COPYING.LGPL
 %make_install
+## Remove excluded files
+rm -f %{buildroot}/usr/bin/cryptsetup
+rm -f %{buildroot}/usr/bin/veritysetup
+rm -f %{buildroot}/usr/include/libcryptsetup.h
+rm -f %{buildroot}/usr/lib/python3.7/site-packages/pycryptsetup.so
+rm -f %{buildroot}/usr/lib64/libcryptsetup.a
+rm -f %{buildroot}/usr/lib64/libcryptsetup.so
+rm -f %{buildroot}/usr/lib64/pkgconfig/libcryptsetup.pc
+rm -f %{buildroot}/usr/share/man/man8/cryptsetup.8
+rm -f %{buildroot}/usr/share/man/man8/veritysetup.8
 
 %files
 %defattr(-,root,root,-)
-
-%files bin
-%defattr(-,root,root,-)
-%exclude /usr/bin/cryptsetup
-%exclude /usr/bin/veritysetup
-
-%files dev
-%defattr(-,root,root,-)
-%exclude /usr/include/libcryptsetup.h
-%exclude /usr/lib64/libcryptsetup.a
-%exclude /usr/lib64/libcryptsetup.so
-%exclude /usr/lib64/pkgconfig/libcryptsetup.pc
 
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libcryptsetup.so.4
 /usr/lib64/libcryptsetup.so.4.7.0
 
-%files man
-%defattr(-,root,root,-)
-%exclude /usr/share/man/man8/cryptsetup.8
-%exclude /usr/share/man/man8/veritysetup.8
-
-%files python
-%defattr(-,root,root,-)
-
-%files python3
-%defattr(-,root,root,-)
-%exclude /usr/lib/python3.6/site-packages/pycryptsetup.so
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/compat-cryptsetup-soname4/COPYING
+/usr/share/package-licenses/compat-cryptsetup-soname4/COPYING.LGPL
