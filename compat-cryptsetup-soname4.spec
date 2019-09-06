@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : compat-cryptsetup-soname4
 Version  : 1.7.5
-Release  : 32
+Release  : 34
 URL      : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Source0  : https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.5.tar.xz
 Summary  : cryptsetup library
@@ -20,6 +20,8 @@ BuildRequires : pkgconfig(openssl)
 BuildRequires : pkgconfig(pwquality)
 BuildRequires : popt-dev
 BuildRequires : python3-dev
+# Suppress generation of debuginfo
+%global debug_package %{nil}
 Patch1: 0001-pycryptsetup-test.py-change-python-interpreter.patch
 
 %description
@@ -53,7 +55,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1564436552
+export SOURCE_DATE_EPOCH=1567806809
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -73,7 +75,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1564436552
+export SOURCE_DATE_EPOCH=1567806809
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/compat-cryptsetup-soname4
 cp COPYING %{buildroot}/usr/share/package-licenses/compat-cryptsetup-soname4/COPYING
